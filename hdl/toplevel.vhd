@@ -353,7 +353,7 @@ architecture Behavioral of toplevel is
   signal rbcp_gmii_ack     : std_logic_vector(kNumGtx-1 downto 0); -- : Access acknowledge
   signal rbcp_gmii_rd      : typeUdpData;
 
-  attribute mark_debug  of sitcp_ip_addr  : signal is "true";
+  attribute mark_debug  of sitcp_ip_addr  : signal is kEnDebugTop;
 
   component WRAP_SiTCP_GMII_XC7K_32K
     port
@@ -859,7 +859,8 @@ architecture Behavioral of toplevel is
       laccpUp             => is_ready_for_daq,
       partnerIpAddr       => link_addr_partter,
       hbcOffset           => hbc_offset,
-      fineOffset          => std_logic_vector(laccp_fine_offset),
+      localFineOffset     => std_logic_vector(local_fine_offset),
+      laccpFineOffset     => std_logic_vector(laccp_fine_offset),
       hbfState            => open,
 
       -- Local bus --
