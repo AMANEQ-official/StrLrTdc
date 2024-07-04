@@ -155,8 +155,8 @@ architecture Behavioral of toplevel is
   signal dcr_d        : std_logic_vector(kNumInputMZN-1 downto 0);
 
   -- MIKUMARI -----------------------------------------------------------------------------
-  --constant  kPcbVersion : string:= "GN-2006-4";
-  constant  kPcbVersion : string:= "GN-2006-1";
+  constant  kPcbVersion : string:= "GN-2006-4";
+  --constant  kPcbVersion : string:= "GN-2006-1";
 
   function GetMikuIoStd(version: string) return string is
   begin
@@ -257,7 +257,7 @@ architecture Behavioral of toplevel is
 
   -- Scaler -------------------------------------------------------------------
   constant kMsbScr      : integer:= kNumSysInput+kNumInput-1;
-  signal scr_en_in      : std_logic_vector(kMsbScr downto 0);
+  signal scr_en_in      : std_logic_vector(kMsbScr downto 0):= (others => '0');
 
   -- Streaming TDC ------------------------------------------------------------
   -- scaler --
@@ -431,6 +431,9 @@ architecture Behavioral of toplevel is
   end component;
 
   -- SFP transceiver -----------------------------------------------------------------------
+  constant kPcsPmaLinkStatus  : integer:= 0;
+  signal pcs_pma_status       : std_logic_vector(15 downto 0);
+
   constant kWidthPhyAddr  : integer:= 5;
   constant kMiiPhyad      : std_logic_vector(kWidthPhyAddr-1 downto 0):= "00000";
   signal mii_init_mdc, mii_init_mdio : std_logic;
@@ -540,9 +543,9 @@ architecture Behavioral of toplevel is
   mmcm_cdcm_reset <= (not delayed_usr_rstb);
 
   system_reset      <= (not clk_miku_locked) or (not USR_RSTB);
-  raw_pwr_on_reset  <= (not clk_sys_locked) or (not USR_RSTB);
+  raw_pwr_on_reset  <= (not clk_sys_locked);-- or (not USR_RSTB);
   u_KeepPwrOnRst : entity mylib.RstDelayTimer
-    port map(raw_pwr_on_reset, X"1FFFFFFF", clk_slow, module_ready, pwr_on_reset);
+    port map(raw_pwr_on_reset, X"0FFFFFFF", clk_sys, module_ready, pwr_on_reset);
 
   u_RstFromMiku : entity mylib.SigStretcher
     generic map(kLength => 8)
@@ -884,6 +887,9 @@ architecture Behavioral of toplevel is
   scr_en_in(kMsbScr - kIndexHbfThrotTime)   <= scr_thr_on(4);
   scr_en_in(kMsbScr - kIndexMikuError)      <= (pattern_error(kIdMikuSec) or checksum_err(kIdMikuSec) or frame_broken(kIdMikuSec) or recv_terminated(kIdMikuSec)) and is_ready_for_daq(kIdMikuSec);
 
+  scr_en_in(kMsbScr - kIndexTrgReq)         <= '0';
+  scr_en_in(kMsbScr - kIndexTrgRejected)    <= '0';
+
   scr_en_in(kNumInput-1 downto 0)           <= swap_vect(hit_out);
 
   u_SCR: entity mylib.FreeRunScaler
@@ -1117,7 +1123,7 @@ architecture Behavioral of toplevel is
 
   -- SiTCP Inst ------------------------------------------------------------------------
   u_SiTCPRst : entity mylib.ResetGen
-    port map(pwr_on_reset or (not mmcm_locked) or rst_from_miku, clk_sys, sitcp_reset);
+    port map(pwr_on_reset or (not pcs_pma_status(kPcsPmaLinkStatus)) or rst_from_miku, clk_sys, sitcp_reset);
 
   gen_SiTCP : for i in 0 to kNumGtx-1 generate
 
@@ -1127,7 +1133,7 @@ architecture Behavioral of toplevel is
       port map
       (
         CLK               => clk_sys, --: System Clock >129MHz
-        RST               => (sitcp_reset or pwr_on_reset), --: System reset
+        RST               => (sitcp_reset), --: System reset
         -- Configuration parameters
         FORCE_DEFAULTn    => dip_sw(kSiTCP.Index), --: Load default parameters
         EXT_IP_ADDR       => X"00000000", --: IP address[31:0]
@@ -1225,13 +1231,11 @@ architecture Behavioral of toplevel is
   end generate;
 
   -- SFP transceiver -------------------------------------------------------------------
-  u_MiiRstTimer_Inst : entity mylib.RstDelayTimer
+  u_MiiRstTimer_Inst : entity mylib.MiiRstTimer
     port map(
-      rstIn       => (pwr_on_reset or sitcp_reset or emergency_reset(0)),
-      preSetVal   => X"00FFFFFF",
+      rst         => emergency_reset(0),
       clk         => clk_sys,
-      readyOut    => open,
-      delayRstOut => mii_reset
+      rstMiiOut   => mii_reset
     );
 
   u_MiiInit_Inst : mii_initializer
@@ -1337,7 +1341,7 @@ architecture Behavioral of toplevel is
 
         -- General IO's
         ---------------
-        status_vector        => open,
+        status_vector        => pcs_pma_status,
         reset                => pwr_on_reset
         );
   end generate;
