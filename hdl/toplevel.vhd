@@ -68,19 +68,19 @@ entity toplevel is
 
 -- JItter cleaner -------------------------------------------------------
     CDCE_PDB            : out std_logic;
-    CDCE_LOCK           : in std_logic;
-    CDCE_SCLK           : out std_logic;
-    CDCE_SO             : in std_logic;
-    CDCE_SI             : out std_logic;
-    CDCE_LE             : out std_logic;
-    CDCE_REFP           : out std_logic;
-    CDCE_REFN           : out std_logic;
-
-    CLK_FASTP           : in std_logic;
-    CLK_FASTN           : in std_logic;
-    CLK_SLOWP           : in std_logic;
-    CLK_SLOWN           : in std_logic;
-
+--    CDCE_LOCK           : in std_logic;
+--    CDCE_SCLK           : out std_logic;
+--    CDCE_SO             : in std_logic;
+--    CDCE_SI             : out std_logic;
+--    CDCE_LE             : out std_logic;
+--    CDCE_REFP           : out std_logic;
+--    CDCE_REFN           : out std_logic;
+--
+--    CLK_FASTP           : in std_logic;
+--    CLK_FASTN           : in std_logic;
+--    CLK_SLOWP           : in std_logic;
+--    CLK_SLOWN           : in std_logic;
+--
 -- Main port ------------------------------------------------------------
 -- Up port --
     MAIN_IN_U           : in std_logic_vector(31 downto 0);
@@ -161,8 +161,8 @@ architecture Behavioral of toplevel is
   signal dcr_d        : std_logic_vector(kNumInputMZN-1 downto 0);
 
   -- MIKUMARI -----------------------------------------------------------------------------
-  --constant  kPcbVersion : string:= "GN-2006-4";
-  constant  kPcbVersion : string:= "GN-2006-1";
+  constant  kPcbVersion : string:= "GN-2006-4";
+  --constant  kPcbVersion : string:= "GN-2006-1";
 
   function GetMikuIoStd(version: string) return string is
   begin
@@ -1070,36 +1070,37 @@ architecture Behavioral of toplevel is
       );
 
   -- C6C -------------------------------------------------------------------------------
-  u_C6C_Inst : entity mylib.CDCE62002Controller
-    generic map(
-      kSysClkFreq         => 125_000_000
-      )
-    port map(
-      rst                 => system_reset,
-      clk                 => clk_slow,
-      refClkIn            => gmod_clk,
-
-      chipReset           => c6c_reset,
-      clkIndep            => clk_sys,
-      chipLock            => CDCE_LOCK,
-
-      -- Module output --
-      PDB                 => CDCE_PDB,
-      REF_CLKP            => CDCE_REFP,
-      REF_CLKN            => CDCE_REFN,
-      CSB_SPI             => CDCE_LE,
-      SCLK_SPI            => CDCE_SCLK,
-      MOSI_SPI            => CDCE_SI,
-      MISO_SPI            => CDCE_SO,
-
-      -- Local bus --
-      addrLocalBus        => addr_LocalBus,
-      dataLocalBusIn      => data_LocalBusIn,
-      dataLocalBusOut     => data_LocalBusOut(kC6C.ID),
-      reLocalBus          => re_LocalBus(kC6C.ID),
-      weLocalBus          => we_LocalBus(kC6C.ID),
-      readyLocalBus       => ready_LocalBus(kC6C.ID)
-    );
+  CDCE_PDB  <= '0';
+--  u_C6C_Inst : entity mylib.CDCE62002Controller
+--    generic map(
+--      kSysClkFreq         => 125_000_000
+--      )
+--    port map(
+--      rst                 => system_reset,
+--      clk                 => clk_slow,
+--      refClkIn            => gmod_clk,
+--
+--      chipReset           => c6c_reset,
+--      clkIndep            => clk_sys,
+--      chipLock            => CDCE_LOCK,
+--
+--      -- Module output --
+--      PDB                 => CDCE_PDB,
+--      REF_CLKP            => CDCE_REFP,
+--      REF_CLKN            => CDCE_REFN,
+--      CSB_SPI             => CDCE_LE,
+--      SCLK_SPI            => CDCE_SCLK,
+--      MOSI_SPI            => CDCE_SI,
+--      MISO_SPI            => CDCE_SO,
+--
+--      -- Local bus --
+--      addrLocalBus        => addr_LocalBus,
+--      dataLocalBusIn      => data_LocalBusIn,
+--      dataLocalBusOut     => data_LocalBusOut(kC6C.ID),
+--      reLocalBus          => re_LocalBus(kC6C.ID),
+--      weLocalBus          => we_LocalBus(kC6C.ID),
+--      readyLocalBus       => ready_LocalBus(kC6C.ID)
+--    );
 
   -- MIG -------------------------------------------------------------------------------
 
@@ -1479,26 +1480,26 @@ architecture Behavioral of toplevel is
       );
 
 
-  u_IBUFDS_SLOW_inst : IBUFDS
-    generic map (
-       DIFF_TERM => FALSE, -- Differential Termination
-       IBUF_LOW_PWR => FALSE, -- Low power (TRUE) vs. performance (FALSE) setting for referenced I/O standards
-       IOSTANDARD => "LVDS")
-    port map (
-       O => c6c_slow,  -- Buffer output
-       I => CLK_SLOWP,  -- Diff_p buffer input (connect directly to top-level port)
-       IB => CLK_SLOWN -- Diff_n buffer input (connect directly to top-level port)
-       );
-
-  u_IBUFDS_FAST_inst : IBUFDS
-    generic map (
-       DIFF_TERM => FALSE, -- Differential Termination
-       IBUF_LOW_PWR => FALSE, -- Low power (TRUE) vs. performance (FALSE) setting for referenced I/O standards
-       IOSTANDARD => "LVDS")
-    port map (
-       O => c6c_fast,  -- Buffer output
-       I => CLK_FASTP,  -- Diff_p buffer input (connect directly to top-level port)
-       IB => CLK_FASTN -- Diff_n buffer input (connect directly to top-level port)
-       );
-
+--  u_IBUFDS_SLOW_inst : IBUFDS
+--    generic map (
+--       DIFF_TERM => FALSE, -- Differential Termination
+--       IBUF_LOW_PWR => FALSE, -- Low power (TRUE) vs. performance (FALSE) setting for referenced I/O standards
+--       IOSTANDARD => "LVDS")
+--    port map (
+--       O => c6c_slow,  -- Buffer output
+--       I => CLK_SLOWP,  -- Diff_p buffer input (connect directly to top-level port)
+--       IB => CLK_SLOWN -- Diff_n buffer input (connect directly to top-level port)
+--       );
+--
+--  u_IBUFDS_FAST_inst : IBUFDS
+--    generic map (
+--       DIFF_TERM => FALSE, -- Differential Termination
+--       IBUF_LOW_PWR => FALSE, -- Low power (TRUE) vs. performance (FALSE) setting for referenced I/O standards
+--       IOSTANDARD => "LVDS")
+--    port map (
+--       O => c6c_fast,  -- Buffer output
+--       I => CLK_FASTP,  -- Diff_p buffer input (connect directly to top-level port)
+--       IB => CLK_FASTN -- Diff_n buffer input (connect directly to top-level port)
+--       );
+--
 end Behavioral;
