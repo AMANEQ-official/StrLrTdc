@@ -59,17 +59,17 @@ set_property PACKAGE_PIN W11 [get_ports {NIM_OUT[2]}]
 
 # JItter cleaner -------------------------------------------------------
 set_property PACKAGE_PIN AC14 [get_ports CDCE_PDB]
-set_property PACKAGE_PIN AB15 [get_ports CDCE_LOCK]
-set_property PACKAGE_PIN AD14 [get_ports CDCE_SCLK]
-set_property PACKAGE_PIN AB14 [get_ports CDCE_SO]
-set_property PACKAGE_PIN AA17 [get_ports CDCE_SI]
-set_property PACKAGE_PIN AA18 [get_ports CDCE_LE]
-set_property PACKAGE_PIN AD15 [get_ports CDCE_REFP]
-set_property PACKAGE_PIN AE15 [get_ports CDCE_REFN]
-set_property PACKAGE_PIN AA10 [get_ports CLK_FASTP]
-set_property PACKAGE_PIN AB10 [get_ports CLK_FASTN]
-set_property PACKAGE_PIN AB11 [get_ports CLK_SLOWP]
-set_property PACKAGE_PIN AC11 [get_ports CLK_SLOWN]
+#set_property PACKAGE_PIN AB15 [get_ports CDCE_LOCK]
+#set_property PACKAGE_PIN AD14 [get_ports CDCE_SCLK]
+#set_property PACKAGE_PIN AB14 [get_ports CDCE_SO]
+#set_property PACKAGE_PIN AA17 [get_ports CDCE_SI]
+#set_property PACKAGE_PIN AA18 [get_ports CDCE_LE]
+#set_property PACKAGE_PIN AD15 [get_ports CDCE_REFP]
+#set_property PACKAGE_PIN AE15 [get_ports CDCE_REFN]
+#set_property PACKAGE_PIN AA10 [get_ports CLK_FASTP]
+#set_property PACKAGE_PIN AB10 [get_ports CLK_FASTN]
+#set_property PACKAGE_PIN AB11 [get_ports CLK_SLOWP]
+#set_property PACKAGE_PIN AC11 [get_ports CLK_SLOWN]
 
 
 # Main port ------------------------------------------------------------
@@ -324,18 +324,18 @@ set_property IOB TRUE [get_ports NIM_OUT[*]]
 
 # JItter cleaner -------------------------------------------------------
 set_property IOSTANDARD LVCMOS18 [get_ports CDCE_PDB]
-set_property IOSTANDARD LVCMOS18 [get_ports CDCE_LOCK]
-set_property IOSTANDARD LVCMOS18 [get_ports CDCE_SCLK]
-set_property IOSTANDARD LVCMOS18 [get_ports CDCE_SO]
-set_property IOSTANDARD LVCMOS18 [get_ports CDCE_SI]
-set_property IOSTANDARD LVCMOS18 [get_ports CDCE_LE]
-set_property IOSTANDARD LVDS [get_ports CDCE_REFP]
-set_property IOSTANDARD LVDS [get_ports CDCE_REFN]
-
-set_property IOSTANDARD LVDS [get_ports CLK_FASTP]
-set_property IOSTANDARD LVDS [get_ports CLK_FASTN]
-set_property IOSTANDARD LVDS [get_ports CLK_SLOWP]
-set_property IOSTANDARD LVDS [get_ports CLK_SLOWN]
+#set_property IOSTANDARD LVCMOS18 [get_ports CDCE_LOCK]
+#set_property IOSTANDARD LVCMOS18 [get_ports CDCE_SCLK]
+#set_property IOSTANDARD LVCMOS18 [get_ports CDCE_SO]
+#set_property IOSTANDARD LVCMOS18 [get_ports CDCE_SI]
+#set_property IOSTANDARD LVCMOS18 [get_ports CDCE_LE]
+#set_property IOSTANDARD LVDS [get_ports CDCE_REFP]
+#set_property IOSTANDARD LVDS [get_ports CDCE_REFN]
+#
+#set_property IOSTANDARD LVDS [get_ports CLK_FASTP]
+#set_property IOSTANDARD LVDS [get_ports CLK_FASTN]
+#set_property IOSTANDARD LVDS [get_ports CLK_SLOWP]
+#set_property IOSTANDARD LVDS [get_ports CLK_SLOWN]
 
 # Main port ------------------------------------------------------------
 # Up port --
