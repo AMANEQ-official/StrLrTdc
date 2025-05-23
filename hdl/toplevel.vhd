@@ -530,6 +530,7 @@ architecture Behavioral of toplevel is
 
   signal clk_fast, clk_slow   : std_logic;
   signal clk_tdc              : std_logic_vector(kNumTdcClock-1 downto 0);
+  signal clk_sys_div16        : std_logic;
   signal mmcm_cdcm_locked     : std_logic;
   signal mmcm_cdcm_reset      : std_logic;
   --signal pll_is_locked        : std_logic;
@@ -838,6 +839,7 @@ architecture Behavioral of toplevel is
         heartbeatCount    => heartbeat_count,
         hbfNumber         => hbf_number,
         hbfNumMismatch    => hbf_num_mismatch,
+        clkDiv16          => clk_sys_div16,
 
         -- DAQ I/F --
         hbfCtrlGateIn     => frame_ctrl_gate,
@@ -1042,7 +1044,7 @@ architecture Behavioral of toplevel is
   intsig_to_iom(2)      <= laccp_pulse_out(kDownPulseTrigger);
   intsig_to_iom(3)      <= frame_flag_out(0);
   intsig_to_iom(4)      <= frame_flag_out(1);
-  intsig_to_iom(5)      <= '1';
+  intsig_to_iom(5)      <= clk_sys_div16;
   intsig_to_iom(6)      <= '1';
   intsig_to_iom(7)      <= '1';
 
